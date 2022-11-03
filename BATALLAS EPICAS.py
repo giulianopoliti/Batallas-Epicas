@@ -14,7 +14,6 @@ def comienzo():
             entrada = int(input(">>>> ")) #agregar excepcion para cuando no se pone un numero -> ValueError
             assert entrada >= 1 and entrada <= 4
             return entrada
-            break
         except ValueError:
             print("Error. Ingresar 1, 2, 3 o 4.", end=" ")
 
@@ -28,16 +27,13 @@ def comoJugar():
         entrada = input("Enter para salir.")
 def personajes():
     personajes  = {
-        "Charizard": ["Charizard", 250, 30, 35, 70],
-        "Mario": ["Mario", 280, 25, 30, 60],
-        "Tauros": ["Tauros", 225, 40,25,80],
-        "Spiderman": ["Spiderman", 300, 20, 30, 50],
-        "Harrypotter": ["HarryPotter", 180,45,40,90],
-        "Goku": ["Goku", 210, 40,40,70],
-        "Vegetta": ["Vegetta", 250, 32, 32, 70],
-        "Prueba1": ["Prueba1", 100, 25, 50, 50],
-        "Prueba2": ["Prueba2", 100, 25, 50, 50],
-        "Prueba3": ["Prueba2", 100, 25, 50, 50],
+        "Charizard": ["Charizard", 250, 30, 35, 85, [1,16]],
+        "Mario": ["Mario", 280, 25, 30, 70, [1,12]],
+        "Tauros": ["Tauros", 225, 40,25,70, [1,12]],
+        "Spiderman": ["Spiderman", 300, 20, 30, 50, [1,10]],
+        "Harrypotter": ["HarryPotter", 180,45,40,100, [1,16]],
+        "Goku": ["Goku", 210, 40,40,70, [1,12]],
+        "Vegetta": ["Vegetta", 250, 32, 32, 80, [1,14]],
     }
     print("Personajes disponibles para elegir:")
     for personaje in personajes:
@@ -45,12 +41,13 @@ def personajes():
     print()
     try:
         print("Quiere saber las estadisticas de todos los personajes?")
-        decision = int(input("Ingrese 0 para verlas, 1 para continuar: "))
+        decision = int(input("Ingrese 0 para verlas, cualquier caracter para continuar: "))
         assert decision == 0, "Valor inválido."
         columnas = len((personajes)["Goku"][:]) 
         filas = len((personajes).keys()) 
         matriz = [[0] * columnas for i in range(filas)]
-        lista = ["PERSONAJES", "VIDA", "ATAQUE", "CURACION", "DEFINITIVA"]
+        lista = ["PERSONAJES", "VIDA", "ATAQUE", "CURACION", "DEFINITIVA", "PROBABILIDAD DEFINITIVA"]
+        listaProbabilidades = ["50%" , "75%", "75%", "80%", "50%", "75%", "57%" ]
         listapersonajes = list(personajes.keys())
         for i in range(filas):
             for j in range(columnas):
@@ -58,12 +55,15 @@ def personajes():
                 matriz[i][0] = listapersonajes[i]
                 datos = list(personajes.get(listapersonajes[i]))
                 matriz[i][j] = datos[j]
+                matriz[i][columnas-1] = listaProbabilidades[i]
         prolijidad = 0
         for i in range(filas):
             for j in range(columnas):
                 print(str(matriz[i][j]).center(prolijidad+15), end="")
             print()
     except AssertionError:
+        pass
+    except ValueError:
         pass
     return personajes
 def elegirPokemones(nombre, personajes):
@@ -180,8 +180,13 @@ def partida(jugador1, personaje1, jugador2, personaje2):
             if accion == 3: #se suma la vida xq se cura
                 vidaPersonaje1 += personaje1[accion]
             elif accion == 4:
-                vidaPersonaje2 -= personaje1[accion]
-                contador1 = 0
+                if random.randint(personaje1[5][0], personaje1 [5][1]) <= 8:
+                    vidaPersonaje2 -= personaje1[accion]
+                    contador1 = 0
+                else:
+                    contador1 = 3
+                    print("Has fallado la definitiva. Pierdes el turno.")
+                    
             else: #ataca
                 vidaPersonaje2 -= personaje1[accion]
 
@@ -201,8 +206,12 @@ def partida(jugador1, personaje1, jugador2, personaje2):
             if accion == 3:
                 vidaPersonaje2 += personaje2[accion]
             elif accion == 4:
-                vidaPersonaje1 -= personaje2[accion]
-                contador2 = 0
+                if random.randint(personaje2[5][0], personaje2[5][1]) <= 8:
+                    vidaPersonaje1 -= personaje2[accion]
+                    contador2 = 0
+                else:
+                    print("Has fallado la definitiva. Pierdes el turno")
+                    contador2 = 3
             else:
                 vidaPersonaje1 -= personaje2[accion]
 
@@ -243,4 +252,4 @@ elif modoDeJuego == 3:
     comoJugar()
 
 else:
-    print("Hasta la proxima!")
+    print("Hasta la proxima!") 
