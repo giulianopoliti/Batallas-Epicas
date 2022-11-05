@@ -1,5 +1,6 @@
 import random
-
+def rand(a,b):
+    return random.randint(a,b)
 def comienzo():
     print()
     print("BATALLAS POKEMON".center(100))
@@ -27,13 +28,13 @@ def comoJugar():
         entrada = input("Enter para salir.")
 def personajes():
     personajes  = {
-        "Charizard": ["Charizard", 250, 30, 35, 85, [1,16]],
-        "Mario": ["Mario", 280, 25, 30, 70, [1,12]],
-        "Tauros": ["Tauros", 225, 40,25,70, [1,12]],
-        "Spiderman": ["Spiderman", 300, 20, 30, 50, [1,10]],
-        "Harrypotter": ["HarryPotter", 180,45,40,100, [1,16]],
-        "Goku": ["Goku", 210, 40,40,70, [1,12]],
-        "Vegetta": ["Vegetta", 250, 32, 32, 80, [1,14]],
+        "Charizard": ["Charizard", 250, [28, 38], 35, 85, [1,16]],
+        "Mario": ["Mario", 280, [25,32], 30, 70, [1,12]],
+        "Tauros": ["Tauros", 225, [33,43],25,70, [1,12]],
+        "Spiderman": ["Spiderman", 300, [20,25], 30, 50, [1,10]],
+        "Harrypotter": ["HarryPotter", 180,[44,54],40,100, [1,16]],
+        "Goku": ["Goku", 210, [39,46],40,70, [1,12]],
+        "Vegetta": ["Vegetta", 250, [30,36], 32, 80, [1,14]],
     }
     print("Personajes disponibles para elegir:")
     for personaje in personajes:
@@ -46,7 +47,7 @@ def personajes():
         columnas = len((personajes)["Goku"][:]) 
         filas = len((personajes).keys()) 
         matriz = [[0] * columnas for i in range(filas)]
-        lista = ["PERSONAJES", "VIDA", "ATAQUE", "CURACION", "DEFINITIVA", "PROBABILIDAD DEFINITIVA"]
+        lista = ["PERSONAJES", "VIDA", "RANGO BÁSICO", "CURACIÓN", "DEFINITIVA", "PROBABILIDAD DEFINITIVA"]
         listaProbabilidades = ["50%" , "75%", "75%", "80%", "50%", "75%", "57%" ]
         listapersonajes = list(personajes.keys())
         for i in range(filas):
@@ -55,11 +56,12 @@ def personajes():
                 matriz[i][0] = listapersonajes[i]
                 datos = list(personajes.get(listapersonajes[i]))
                 matriz[i][j] = datos[j]
+                #matriz[i][j]= str(datos[j][0]) + "a" + str(datos[j][1])
                 matriz[i][columnas-1] = listaProbabilidades[i]
         prolijidad = 0
         for i in range(filas):
             for j in range(columnas):
-                print(str(matriz[i][j]).center(prolijidad+15), end="")
+                print(str(matriz[i][j]).strip("[]").center(prolijidad+15), end="")
             print()
     except AssertionError:
         pass
@@ -77,7 +79,7 @@ def elegirPokemones(nombre, personajes):
             print(f"Elegiste a {ent}! Estas son sus estadisticas:")
             print()
             print(f"Vida: {personajes[ent][1]}".center(25), end="")
-            print(f"Ataque: {personajes[ent][2]}".center(25), end="")
+            print(f"Ataque: {personajes[ent][2][0]}, {personajes[ent][2][1]}".center(25), end = "")
             print(f"Curación: {personajes[ent][3]}".center(25), end="")
             print(f"Definitiva: {personajes[ent][4]}".center(25))
             print()
@@ -151,7 +153,7 @@ def partida(jugador1, personaje1, jugador2, personaje2):
     print(str(personaje2[1]).rjust(40))
     
     print(str(personaje1[2]).ljust(40), end="")
-    print("ATAQUE".center(20), end="")
+    print("RANGO ATAQUE".strip("[]").center(20), end="")
     print(str(personaje2[2]).rjust(40))
 
     print(str(personaje1[3]).ljust(40), end="")
@@ -180,7 +182,7 @@ def partida(jugador1, personaje1, jugador2, personaje2):
             if accion == 3: #se suma la vida xq se cura
                 vidaPersonaje1 += personaje1[accion]
             elif accion == 4:
-                if random.randint(personaje1[5][0], personaje1 [5][1]) <= 8:
+                if rand(personaje1[5][0], personaje1 [5][1]) <= 8:
                     vidaPersonaje2 -= personaje1[accion]
                     contador1 = 0
                 else:
@@ -188,7 +190,7 @@ def partida(jugador1, personaje1, jugador2, personaje2):
                     print("Has fallado la definitiva. Pierdes el turno.")
                     
             else: #ataca
-                vidaPersonaje2 -= personaje1[accion]
+                vidaPersonaje2 -= rand(personaje1[accion][0], personaje1[accion][1])
 
             turno = 1
 
@@ -206,14 +208,14 @@ def partida(jugador1, personaje1, jugador2, personaje2):
             if accion == 3:
                 vidaPersonaje2 += personaje2[accion]
             elif accion == 4:
-                if random.randint(personaje2[5][0], personaje2[5][1]) <= 8:
+                if rand(personaje2[5][0], personaje2[5][1]) <= 8:
                     vidaPersonaje1 -= personaje2[accion]
                     contador2 = 0
                 else:
                     print("Has fallado la definitiva. Pierdes el turno")
                     contador2 = 3
             else:
-                vidaPersonaje1 -= personaje2[accion]
+                vidaPersonaje1 -= rand(personaje2[accion][0], personaje2[accion][1])
 
             turno = 0
 
